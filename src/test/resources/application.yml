@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database: h2
+  datasource:
+    driver-class-name: org.h
+    username: oxpndgutqiqhpk
+    password: 82d67fc5e3328436e23ed9d4b4abc3f5285e6cd8a86940b8abcc61ba6e0138db
+    url: jdbc:postgresql://ec2-52-7-159-155.compute-1.amazonaws.com:5432/d2na8akrl7g16c
+server:
+  port: 4000
