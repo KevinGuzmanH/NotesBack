@@ -12,8 +12,7 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,Integer> {
 
-    @Override
-    Optional<Usuario> findById(Integer integer);
-
     Optional<Usuario> findByUsername(String nombreUsuario);
+
+
 }

@@ -1,14 +1,16 @@
 package com.kevinproject.backtienda.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
-    private String message;
+public class ErrorDto {
+    private String error;
+    private int code;
 }

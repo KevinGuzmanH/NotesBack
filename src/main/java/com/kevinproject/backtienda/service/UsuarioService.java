@@ -16,7 +16,11 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public Optional<Usuario> GetUserByUsername(String username){
+    public Optional<Usuario> findUsuarioByUsername(String username){
       return usuarioRepository.findByUsername(username);
+    }
+
+    public Usuario saveUsuario(Usuario newUsuario){
+        return usuarioRepository.save(newUsuario);
     }
 }
