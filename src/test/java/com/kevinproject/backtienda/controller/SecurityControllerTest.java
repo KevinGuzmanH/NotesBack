@@ -67,7 +67,6 @@ class SecurityControllerTest {
                 .build();
     }
 
-
     @Test
     void signUp() throws Exception {
        NewUsuario newUsuario = NewUsuario.builder()
@@ -77,23 +76,20 @@ class SecurityControllerTest {
                 .password("123456")
                 .build();
 
-       Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<NewUsuario>> violations = validator.validate(newUsuario);
-
-        assertThat(violations.size()).isEqualTo(0);
-
         mockMvc.perform(post("/security/V1/signUp")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .content(gson.toJson("pepe")))
+                            .content(gson.toJson(newUsuario)))
                             .andExpect(status().is(201))
+                            .andExpect(jsonPath("$.username",is("machin")))
                            ;
     }
+
 
     @Test
     void deleteById() throws Exception {
         mockMvc.perform(get("/security/V1/delete/22"))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.text", is("mensaje")));
+                .andExpect(jsonPath("$.message", is("asd")));
     }
 
     @Test

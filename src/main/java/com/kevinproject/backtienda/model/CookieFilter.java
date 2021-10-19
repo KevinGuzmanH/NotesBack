@@ -4,6 +4,7 @@ package com.kevinproject.backtienda.model;
 import com.kevinproject.backtienda.service.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,9 @@ public class CookieFilter extends OncePerRequestFilter {
         loger.info("doFilterInternal");
         loger.info(request.getRemoteAddr());
 
+        if ("/security/V1/signIn".equals(request.getServletPath()) && HttpMethod.POST.matches(request.getMethod())){
+
+        }
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
         UserDetails userDetails = userDetailsService.loadUserByUsername("username");
         UsernamePasswordAuthenticationToken auth =

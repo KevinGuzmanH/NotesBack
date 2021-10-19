@@ -28,7 +28,7 @@ public class Note {
     @ManyToOne
     private Usuario usuario;
 
-    @Column(length = 35)
+    @Column(length = 35,unique = true)
     private String title;
 
     @Column

@@ -23,5 +23,5 @@ public class NoteCategory {
     private String name;
 
     @Column(nullable = false)
-    private String decription;
+    private String description;
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -19,6 +21,7 @@ public class NewUsuario {
     private String last_name;
 
     @NotNull
+    @NotBlank
     private String username;
 
     @NotNull

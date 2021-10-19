@@ -38,9 +38,6 @@ public class SecurityController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-
     @PostMapping(path = "/signUp",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
@@ -53,28 +50,30 @@ public class SecurityController {
                 .name(newUsuario.getName())
                 .last_name(newUsuario.getLast_name())
                 .username(newUsuario.getUsername())
-                .password(newUsuario.getPassword())
+                .password(passwordEncoder.encode(newUsuario.getPassword()))
                 .build());
             return ResponseEntity.created(URI.create("/security/V1/register")).body(gson.toJson(savedUsuario));
     }
 
     @GetMapping(path = "/delete/{id}")
-    public void deletebyid(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> deletebyid(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = new Cookie("auth_by_cookie","12345");
         cookie.setHttpOnly(false);
         cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(70 * 70);
         response.addCookie(cookie);
-         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
+        usuarioService.findUsuarioByUsername("u");
+        return ResponseEntity.ok().body(gson.toJson(Message.builder().message("asd").build()));
     }
 
     @PreAuthorize("permitAll()")
-    @PostMapping(path = "/login",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<String> login(HttpServletResponse response,
-                                         @RequestHeader(name = "username",defaultValue = "username",required = false) String username,
-                                         @RequestHeader(name = "password",defaultValue = "password",required = false) String password) {
+    @PostMapping(path = "/signIn",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+                                    ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> signIn(HttpServletResponse response,
+                                         @RequestHeader(name = "username",defaultValue = "username") String username,
+                                         @RequestHeader(name = "password",defaultValue = "password") String password) {
+
         if (!usuarioService.findUsuarioByUsername(username).isPresent())
             return new ResponseEntity<>(gson.toJson(new Message("Nombre de Usuario Incorrecto")),HttpStatus.UNAUTHORIZED);
         if (!passwordEncoder.matches(password,usuarioService.findUsuarioByUsername(username).get().getPassword()))
@@ -84,17 +83,5 @@ public class SecurityController {
         return new ResponseEntity<>(gson.toJson(SecurityContextHolder.getContext().getAuthentication()),HttpStatus.OK);
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping(path = "/success")
-    public ResponseEntity<String> success() {
 
-        return new ResponseEntity<>(gson.toJson("success"),HttpStatus.OK);
-    }
-
-    @PreAuthorize("permitAll()")
-    @GetMapping(path = "/fail")
-    public ResponseEntity<String> fail() {
-
-        return new ResponseEntity<>(gson.toJson("fail"),HttpStatus.OK);
-    }
 }
