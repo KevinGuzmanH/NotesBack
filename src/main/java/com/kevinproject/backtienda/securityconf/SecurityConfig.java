@@ -1,11 +1,13 @@
 package com.kevinproject.backtienda.securityconf;
 
+import com.kevinproject.backtienda.exceptions.EntryPoint;
 import com.kevinproject.backtienda.filter.UserNamePasswordFilter;
 import com.kevinproject.backtienda.model.CookieFilter;
 import com.kevinproject.backtienda.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -29,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    EntryPoint entryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -54,11 +58,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(entryPoint)
+                .and()
                 .addFilterBefore(new CookieFilter(), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
                 .logout().disable()
-                .authorizeRequests().anyRequest().permitAll();
+                .authorizeRequests().antMatchers(HttpMethod.POST,"/security/V1/signUp","/security/V1/signIn").permitAll()
+                .anyRequest().authenticated();
     }
 }

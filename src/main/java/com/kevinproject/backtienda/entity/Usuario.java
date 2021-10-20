@@ -36,6 +36,10 @@ public class Usuario implements UserDetails {
     @Column
     private String password;
 
+    @Column
+    @OneToOne
+    private SessionIdHash hash;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> auth = new HashSet<>();
