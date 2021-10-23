@@ -1,6 +1,7 @@
 package com.kevinproject.backtienda.controller;
 
 import com.google.gson.Gson;
+import com.kevinproject.backtienda.dto.ErrorDto;
 import com.kevinproject.backtienda.dto.Message;
 import com.kevinproject.backtienda.dto.NewUsuario;
 import com.kevinproject.backtienda.entity.SessionIdHash;
@@ -74,20 +75,20 @@ public class SecurityController {
         return ResponseEntity.ok().body(gson.toJson(Message.builder().message("asd").build()));
     }
 
-    @PostMapping(path = "/signIn",consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    @PostMapping(path = "/signIn",consumes = MediaType.APPLICATION_JSON_VALUE
                                     ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signIn(HttpServletResponse response,
                                          @RequestHeader(name = "username",defaultValue = "username") String username,
                                          @RequestHeader(name = "password",defaultValue = "password") String password) {
 
         if (!usuarioService.findUsuarioByUsername(username).isPresent())
-            return new ResponseEntity<>(gson.toJson(new Message("Nombre de Usuario Incorrecto")),HttpStatus.UNAUTHORIZED);
-        if (!passwordEncoder.matches(password,usuarioService.findUsuarioByUsername(username).get().getPassword()))
-            return new ResponseEntity<>(gson.toJson(new Message("Contraseña Incorrecta")),HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(gson.toJson(new Message("Wrong Username")),HttpStatus.UNAUTHORIZED);
+        if (!passwordEncoder.matches(password,passwordEncoder.encode(usuarioService.findUsuarioByUsername(username).get().getPassword())))
+            return new ResponseEntity<>(gson.toJson(new Message("Wrong Password")),HttpStatus.UNAUTHORIZED);
+
         Usuario usuario = usuarioService.findUsuarioByUsername(username).get();
         String hash = hashCreator.getHash();
 
-        if (passwordEncoder.matches(usuario.getPassword(),password)){
             Calendar expiration = Calendar.getInstance();
             expiration.add(Calendar.HOUR_OF_DAY,1);
 
@@ -97,11 +98,8 @@ public class SecurityController {
             Cookie cookie = new Cookie("SESSIONID",hash);
             cookie.setMaxAge(3600);
             response.addCookie(cookie);
-        }else {
+            return ResponseEntity.noContent().build();
 
-        }
-
-        return new ResponseEntity<>(gson.toJson(SecurityContextHolder.getContext().getAuthentication()),HttpStatus.OK);
     }
 
 

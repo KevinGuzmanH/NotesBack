@@ -43,9 +43,9 @@ public class CookieFilter extends OncePerRequestFilter {
         loger.info(request.getRemoteAddr());
 
         if (!"/security/V1/signIn".equals(request.getServletPath()) && HttpMethod.POST.matches(request.getMethod())){
-            MAPPER.readValue(request.getInputStream(), LoginUsuario.class);
+//            MAPPER.readValue(request.getInputStream(), LoginUsuario.class);
 
-            String token = new UsernamePasswordAuthenticationToken()
+
         }
 
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();

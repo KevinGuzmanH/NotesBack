@@ -18,6 +18,10 @@ import java.util.Calendar;
 public class SessionIdHash {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column
     private String hash;
 
     @Column
