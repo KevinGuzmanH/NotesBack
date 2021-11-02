@@ -11,7 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.util.Calendar;
 
-@Entity(name = "note")
+@Entity
 @Data
 @Builder
 @AllArgsConstructor

@@ -8,6 +8,8 @@ import com.kevinproject.backtienda.entity.SessionIdHash;
 import com.kevinproject.backtienda.entity.Usuario;
 import com.kevinproject.backtienda.model.HashCreator;
 import com.kevinproject.backtienda.service.UsuarioService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,7 +51,7 @@ public class SecurityController {
     @PostMapping(path = "/signUp",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> signUp(@Valid NewUsuario newUsuario, BindingResult result){
+    public ResponseEntity<String> signUp(@RequestBody @Valid NewUsuario newUsuario, BindingResult result){
         if (result.hasErrors())
             throw new ValidationException("Check the fields and retry");
         if (usuarioService.findUsuarioByUsername(newUsuario.getUsername()).isPresent())
@@ -60,7 +62,7 @@ public class SecurityController {
                 .username(newUsuario.getUsername())
                 .password(passwordEncoder.encode(newUsuario.getPassword()))
                 .build());
-            return ResponseEntity.created(URI.create("/security/V1/register")).body(gson.toJson(savedUsuario));
+            return ResponseEntity.created(URI.create("/security/V1/signIn")).body(gson.toJson(savedUsuario));
     }
 
     @GetMapping(path = "/delete/{id}")
@@ -75,32 +77,35 @@ public class SecurityController {
         return ResponseEntity.ok().body(gson.toJson(Message.builder().message("asd").build()));
     }
 
-    @PostMapping(path = "/signIn",consumes = MediaType.APPLICATION_JSON_VALUE
+    @GetMapping(path = "/signIn",consumes = MediaType.APPLICATION_JSON_VALUE
                                     ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signIn(HttpServletResponse response,
                                          @RequestHeader(name = "username",defaultValue = "username") String username,
                                          @RequestHeader(name = "password",defaultValue = "password") String password) {
 
         if (!usuarioService.findUsuarioByUsername(username).isPresent())
-            return new ResponseEntity<>(gson.toJson(new Message("Wrong Username")),HttpStatus.UNAUTHORIZED);
-        if (!passwordEncoder.matches(password,passwordEncoder.encode(usuarioService.findUsuarioByUsername(username).get().getPassword())))
-            return new ResponseEntity<>(gson.toJson(new Message("Wrong Password")),HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(gson.toJson(Message.builder().message("Wrong Username").build()),HttpStatus.UNAUTHORIZED);
+        if (!passwordEncoder.matches(password,usuarioService.findUsuarioByUsername(username).get().getPassword()))
+            return new ResponseEntity<>(gson.toJson(Message.builder().message("Wrong Password").build()),HttpStatus.UNAUTHORIZED);
 
         Usuario usuario = usuarioService.findUsuarioByUsername(username).get();
         String hash = hashCreator.getHash();
 
             Calendar expiration = Calendar.getInstance();
             expiration.add(Calendar.HOUR_OF_DAY,1);
+            SessionIdHash sidHash = SessionIdHash.builder().hash(hash).expiration(expiration).build();
 
-            usuario.setHash(SessionIdHash.builder().hash(hash).expiration(expiration).build());
+            usuario.setHash(sidHash);
+
             usuarioService.saveUsuario(usuario);
 
-            Cookie cookie = new Cookie("SESSIONID",hash);
-            cookie.setMaxAge(3600);
-            response.addCookie(cookie);
-            return ResponseEntity.noContent().build();
+            Cookie sessionidCookie = new Cookie("SESSIONID",hash);
+            Cookie usernameCookie = new Cookie("USERNAME", usuario.getUsername());
+            sessionidCookie.setMaxAge(3600);
+            usernameCookie.setMaxAge(3600);
+            response.addCookie(sessionidCookie);
+            response.addCookie(usernameCookie);
+            return ResponseEntity.ok().build();
 
     }
-
-
 }

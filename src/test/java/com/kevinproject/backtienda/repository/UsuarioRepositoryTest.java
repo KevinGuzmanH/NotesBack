@@ -32,7 +32,7 @@ class UsuarioRepositoryTest {
 
     @Test
     void findByUsername() {
-        assertEquals("nombreusr",usuarioRepository.findByUsername("nombreusr").get().getUsername());
+        assertEquals("nombreusr",usuarioRepository.findByUsernameIgnoreCase("nombreusr").get().getUsername());
     }
 
     @Test

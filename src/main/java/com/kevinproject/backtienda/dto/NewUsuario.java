@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Builder
 @Data
@@ -14,17 +15,16 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class NewUsuario {
 
-    @NotNull
+    @NotEmpty
     private String name;
 
-    @NotNull
+    @NotEmpty
     private String last_name;
 
-    @NotNull
-    @NotBlank
+    @NotEmpty
     private String username;
 
-    @NotNull
+    @NotEmpty
     private String password;
 
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "note_category")
+@Entity
 @Data
 @Builder
 @AllArgsConstructor

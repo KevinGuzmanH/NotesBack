@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 import javax.validation.ValidationException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -20,7 +21,6 @@ public class ControllerExceptionHandler {
      @ResponseStatus(HttpStatus.BAD_REQUEST)
      @ExceptionHandler({
              HttpClientErrorException.BadRequest.class,
-             IllegalArgumentException.class,
              ValidationException.class,
              RuntimeException.class
      })
@@ -46,7 +46,8 @@ public class ControllerExceptionHandler {
 
      @ResponseStatus(HttpStatus.UNAUTHORIZED)
      @ExceptionHandler({
-             HttpClientErrorException.Unauthorized.class
+             HttpClientErrorException.Unauthorized.class,
+             NoSuchElementException.class
      })
      @ResponseBody
      public ResponseEntity<ErrorDto> UNAUTHORIZED(Exception exception){

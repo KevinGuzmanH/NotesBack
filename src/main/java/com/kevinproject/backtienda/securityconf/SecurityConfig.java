@@ -60,12 +60,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
-                .addFilterBefore(new CookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(cookieFilter, BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
                 .logout().disable()
-                .authorizeRequests().antMatchers(HttpMethod.POST,"/security/V1/signUp","/security/V1/signIn").permitAll()
+                .authorizeRequests().antMatchers("/security/V1/signIn","/security/V1/signUp").permitAll()
                 .anyRequest().authenticated();
     }
 }
