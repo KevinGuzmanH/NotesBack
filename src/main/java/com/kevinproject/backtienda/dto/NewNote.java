@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -13,13 +14,15 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class NewNote {
 
-    @NotNull
+
     private String category;
 
+    @NotBlank
     @NotNull
     private String title;
 
     @NotNull
+    @NotBlank
     private String text;
 
 }

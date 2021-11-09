@@ -16,8 +16,12 @@ public class NoteCatService {
     @Autowired
     NoteCatRepository noteCatRepository;
 
-    public Optional<NoteCategory> findNoteByName(String name){
+    public Optional<NoteCategory> findCategoryByName(String name){
         return noteCatRepository.findByNameIgnoreCase(name);
+    }
+
+    public NoteCategory saveCategory(NoteCategory noteCategory){
+        return noteCatRepository.save(noteCategory);
     }
 
 }

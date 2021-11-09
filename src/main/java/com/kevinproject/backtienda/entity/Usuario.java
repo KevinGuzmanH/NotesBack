@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private SessionIdHash hash;
 
     @Override

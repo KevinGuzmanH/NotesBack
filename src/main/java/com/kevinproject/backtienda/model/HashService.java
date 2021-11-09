@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Random;
 
 @Component
-public class HashCreator {
+public class HashService {
 
     @Autowired
     UsuarioService usuarioService;
@@ -33,7 +33,7 @@ public class HashCreator {
         return generatedString;
     }
 
-    public Authentication hashValid(String hash, String username){
+    public Authentication hashAuthentication(String hash, String username){
         Usuario usuario = usuarioService.findUsuarioByUsername(username).orElse(null);
         usuario.getHash().getHash().equals(hash);
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(usuario,null, Collections.emptyList());
