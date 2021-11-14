@@ -35,7 +35,9 @@ public class HashService {
 
     public Authentication hashAuthentication(String hash, String username){
         Usuario usuario = usuarioService.findUsuarioByUsername(username).orElse(null);
-        usuario.getHash().getHash().equals(hash);
+        if (!usuario.getHash().getHash().equals(hash)){
+            return null;
+        }
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(usuario,null, Collections.emptyList());
         return auth;
     }

@@ -27,22 +27,19 @@ public class CookieFilter extends OncePerRequestFilter {
 
     @Autowired
     HashService hashService;
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (!"/security/V1/signIn".equals(request.getServletPath()) && !"/security/V1/signUp".equals(request.getServletPath())){
-
-            if (!getCookieValue(request,"SESSIONID").isEmpty()){
+            if (getCookieValue(request,"SESSIONID") == null){
+                loger.info("No hay cookie");
+            }else {
                 String cookieValue = getCookieValue(request,"SESSIONID");
                 String username = getCookieValue(request,"USERNAME");
 
                 SecurityContextHolder.getContext().setAuthentication(hashService.hashAuthentication(cookieValue,username));
-            }else {
-                loger.error("no hay cookie");
             }
-
         }
 
             filterChain.doFilter(request,response);
@@ -50,6 +47,9 @@ public class CookieFilter extends OncePerRequestFilter {
 
 
     private String getCookieValue(HttpServletRequest req, String cookieName) {
+        if (req.getCookies() == null) {
+            return null;
+        }
         return Arrays.stream(req.getCookies())
                 .filter(c -> c.getName().equals(cookieName))
                 .findFirst()

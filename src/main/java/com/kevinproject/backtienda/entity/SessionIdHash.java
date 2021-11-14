@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Calendar;
 
 @Entity
@@ -25,7 +26,6 @@ public class SessionIdHash {
     private String hash;
 
     @Column
-    @Temporal(TemporalType.DATE)
-    private Calendar expiration;
+    private LocalDate expiration;
 
 }

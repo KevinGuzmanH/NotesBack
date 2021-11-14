@@ -7,15 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Calendar;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Note {
 
     @Id
@@ -35,14 +37,12 @@ public class Note {
     private String text;
 
     @Column
-    @Temporal(TemporalType.DATE)
     @CreatedDate
-    private Calendar creation_date;
+    private LocalDate creation_date;
 
     @Column
-    @Temporal(TemporalType.DATE)
     @LastModifiedDate
-    private Calendar edit_date;
+    private LocalDate edit_date;
 
 
 }

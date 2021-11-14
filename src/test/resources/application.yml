@@ -3,7 +3,7 @@ spring:
     active: test
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./src/test/resources/testdb;AUTO_SERVER=true
+    url: jdbc:h2:mem:~/test;
     driverClassName: org.h2.Driver
     username: sa
     password:

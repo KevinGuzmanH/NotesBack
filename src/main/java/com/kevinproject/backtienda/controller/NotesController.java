@@ -3,6 +3,7 @@ package com.kevinproject.backtienda.controller;
 import com.google.gson.Gson;
 import com.kevinproject.backtienda.dto.Message;
 import com.kevinproject.backtienda.dto.NewNote;
+import com.kevinproject.backtienda.dto.UpdateNote;
 import com.kevinproject.backtienda.entity.Note;
 import com.kevinproject.backtienda.entity.NoteCategory;
 import com.kevinproject.backtienda.entity.Usuario;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.net.URI;
+
 
 @RestController
 @RequestMapping("/Notes/V1")
@@ -88,15 +90,25 @@ public class NotesController {
     @PostMapping(path = "/updateNote",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateNote(@Valid NewNote newNote,BindingResult result){
+    public ResponseEntity<String> updateNote(@RequestBody UpdateNote updateNote){
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (result.hasErrors())
-            throw new ValidationException("Check the fields and retry");
-
-        Note note = noteService.findByTitle(newNote.getTitle()).get();
-        note.setText(newNote.getText());
+        Note note = noteService.findByTitleAndUsuario(updateNote.getTitle(),usuario);
+        note.setText(updateNote.getText());
 
         return ResponseEntity.ok().body(gson.toJson(Message.builder().message("Note updated successfully")));
+    }
+
+    @GetMapping(path = "/getNotes")
+    public ResponseEntity<String> getNotes(){
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok().body(gson.toJson(noteService.findAllByUsuario(usuario)));
+    }
+
+    @GetMapping(path = "/getNote/{title}")
+    public ResponseEntity<String> getNotes(@PathVariable("title") String title){
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok().body(gson.toJson(noteService.findByTitleAndUsuario(title,usuario)));
     }
 
 }
