@@ -33,7 +33,7 @@ public class Note {
     @Column(length = 35,unique = true)
     private String title;
 
-    @Column
+    @Column(length = 100000)
     private String text;
 
     @Column
@@ -44,5 +44,7 @@ public class Note {
     @LastModifiedDate
     private LocalDate edit_date;
 
+    @Column
+    private LocalDate doBefore;
 
 }

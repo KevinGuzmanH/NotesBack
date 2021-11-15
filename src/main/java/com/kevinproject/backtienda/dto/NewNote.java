@@ -25,4 +25,7 @@ public class NewNote {
     @NotBlank
     private String text;
 
+    @NotNull
+    @NotBlank
+    private Long doBefore;
 }

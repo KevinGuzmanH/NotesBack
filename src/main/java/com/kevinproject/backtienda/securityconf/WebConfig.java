@@ -20,6 +20,8 @@ public class WebConfig {
     private static final int CORS_FILTER_ORDER = -102;
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String DOBEFORE = "doBefore";
+
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -27,6 +29,7 @@ public class WebConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200");
         config.setAllowedHeaders(Arrays.asList(
+                DOBEFORE,
                 USERNAME,
                 PASSWORD,
                 HttpHeaders.CONTENT_TYPE,

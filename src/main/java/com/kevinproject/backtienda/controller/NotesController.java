@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.net.URI;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 
 @RestController
@@ -63,18 +66,18 @@ public class NotesController {
             noteCategory = noteCatService.saveCategory(NoteCategory.builder().name("").build());;
         }
 
+
+        long milliseconds = newNote.getDoBefore();
+        LocalDate utcDate = Instant.ofEpochMilli(milliseconds).atZone(ZoneId.of("UTC")).toLocalDate();
+
         Note savedNote = noteService.saveNote(Note.builder()
                 .title(newNote.getTitle())
                 .text(newNote.getText())
                 .usuario(usuario)
+                .doBefore(utcDate)
                 .category(noteCategory)
                 .build());
         return ResponseEntity.created(URI.create("/Notes/V1/addNote")).body(gson.toJson(savedNote));
-    }
-
-    @GetMapping(path = "/pepe")
-    public ResponseEntity<String> pr(){
-        return ResponseEntity.ok().body( gson.toJson("asd"));
     }
 
     @PostMapping(path = "/deleteNote",
@@ -95,7 +98,7 @@ public class NotesController {
 
         Note note = noteService.findByTitleAndUsuario(updateNote.getTitle(),usuario);
         note.setText(updateNote.getText());
-
+        noteService.saveNote(note);
         return ResponseEntity.ok().body(gson.toJson(Message.builder().message("Note updated successfully")));
     }
 
@@ -111,4 +114,8 @@ public class NotesController {
         return ResponseEntity.ok().body(gson.toJson(noteService.findByTitleAndUsuario(title,usuario)));
     }
 
+    @GetMapping(path = "/getNoteCategories")
+    public ResponseEntity<String> getNoteCategories(){
+        return ResponseEntity.ok().body(gson.toJson(noteCatService.findAll()));
+    }
 }

@@ -22,6 +22,6 @@ public class NoteCategory {
     @Column(length = 35, nullable = false)
     private String name;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 }
