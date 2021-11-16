@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,35 +33,22 @@ class UsuarioRepositoryTest {
 
     @Test
     void findByUsername() {
-        assertEquals("nombreusr",usuarioRepository.findByUsernameIgnoreCase("nombreusr").get().getUsername());
+        //given
+            String username = "kevinYGH";
+        //when
+            Usuario usuario = usuarioRepository.findByUsernameIgnoreCase(username).get();
+        //then
+        assertEquals("Perez",usuario.getLast_name());
     }
 
     @Test
-    void hash() throws NoSuchAlgorithmException {
-        Logger logger = LoggerFactory.getLogger(UsuarioRepositoryTest.class);
-
-        Random rand = new Random();
-
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedhash = digest.digest(
-                "kevinhzu".toString().getBytes(StandardCharsets.UTF_8));
-
-        logger.info(String.valueOf(encodedhash));
+    void getHashWithUserName() {
+        //given
+        String username = "kevinYGH";
+        //when
+        Usuario usuario = usuarioRepository.findByUsernameIgnoreCase(username).get();
+        //then
+        assertEquals("$2a$10$0DxvQQxK.6kZ.6x8W8XvS.a.5b5j5QP4w8lz4x4pE4nCkKj.7rXK",usuario.getHash().getHash());
     }
 
-    @Test
-    public void givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 64;
-        Random random = new Random();
-
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-        .limit(targetStringLength)
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
-
-        System.out.println(generatedString);
-    }
 }

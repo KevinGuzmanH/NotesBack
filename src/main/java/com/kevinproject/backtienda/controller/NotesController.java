@@ -80,12 +80,13 @@ public class NotesController {
         return ResponseEntity.created(URI.create("/Notes/V1/addNote")).body(gson.toJson(savedNote));
     }
 
-    @PostMapping(path = "/deleteNote",
+    @DeleteMapping(path = "/deleteNote/{title}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteNote(@RequestHeader("noteTitle") String noteTitle){
+    public ResponseEntity<String> deleteNote(@PathVariable("title") String noteTitle){
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        noteService.deleteBytitle(noteTitle);
+        noteService.deleteByTitleAndUsuario(noteTitle,usuario);
 
         return ResponseEntity.ok().body(gson.toJson(Message.builder().message("Note deleted")));
     }

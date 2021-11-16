@@ -11,6 +11,9 @@ import java.util.Set;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note,Integer> {
+
+    void deleteByTitleAndUsuario(String title, Usuario usuario);
+
     Optional<Note> findByTitleAndUsuario(String title, Usuario usuario);
 
     Optional<Note> findByTitleIgnoreCase(String title);

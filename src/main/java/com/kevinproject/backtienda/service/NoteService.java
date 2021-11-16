@@ -37,4 +37,8 @@ public class NoteService {
     public Note findByTitleAndUsuario(String title, Usuario usuario){
         return noteRepository.findByTitleAndUsuario(title,usuario).get();
     }
+
+    public void deleteByTitleAndUsuario(String title, Usuario usuario){
+         noteRepository.deleteByTitleAndUsuario(title,usuario);
+    }
 }
