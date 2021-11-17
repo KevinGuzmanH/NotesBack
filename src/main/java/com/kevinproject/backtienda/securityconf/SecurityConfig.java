@@ -1,13 +1,11 @@
 package com.kevinproject.backtienda.securityconf;
 
 import com.kevinproject.backtienda.exceptions.EntryPoint;
-import com.kevinproject.backtienda.filter.UserNamePasswordFilter;
-import com.kevinproject.backtienda.model.CookieFilter;
+import com.kevinproject.backtienda.filter.CookieFilter;
 import com.kevinproject.backtienda.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

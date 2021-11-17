@@ -6,7 +6,7 @@ import com.kevinproject.backtienda.dto.Message;
 import com.kevinproject.backtienda.dto.NewUsuario;
 import com.kevinproject.backtienda.entity.SessionIdHash;
 import com.kevinproject.backtienda.entity.Usuario;
-import com.kevinproject.backtienda.model.HashService;
+import com.kevinproject.backtienda.service.HashService;
 import com.kevinproject.backtienda.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.net.URI;
@@ -55,18 +52,6 @@ public class SecurityController {
                 .password(passwordEncoder.encode(newUsuario.getPassword()))
                 .build());
             return ResponseEntity.created(URI.create("/security/V1/signIn")).body(gson.toJson(savedUsuario));
-    }
-
-    @GetMapping(path = "/delete/{id}")
-    public ResponseEntity<String> deletebyid(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = new Cookie("auth_by_cookie","12345");
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(70 * 70);
-        response.addCookie(cookie);
-        usuarioService.findUsuarioByUsername("u");
-        return ResponseEntity.ok().body(gson.toJson(Message.builder().message("asd").build()));
     }
 
     @PostMapping(path = "/signIn",consumes = MediaType.APPLICATION_JSON_VALUE

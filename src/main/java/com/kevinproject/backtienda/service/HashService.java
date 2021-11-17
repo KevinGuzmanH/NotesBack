@@ -1,4 +1,4 @@
-package com.kevinproject.backtienda.model;
+package com.kevinproject.backtienda.service;
 
 import com.kevinproject.backtienda.entity.Usuario;
 import com.kevinproject.backtienda.service.UsuarioService;
