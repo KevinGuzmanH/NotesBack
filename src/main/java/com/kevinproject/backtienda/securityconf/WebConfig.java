@@ -27,7 +27,7 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("204.199.117.170");
+        config.addAllowedOrigin("https://noteskeviny.netlify.app");
         config.setAllowedHeaders(Arrays.asList(
                 DOBEFORE,
                 USERNAME,
