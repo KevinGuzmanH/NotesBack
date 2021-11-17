@@ -27,7 +27,7 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("**");
         config.setAllowedHeaders(Arrays.asList(
                 DOBEFORE,
                 USERNAME,
